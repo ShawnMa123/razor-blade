@@ -30,20 +30,27 @@ func main() {
 	// 初始化数据库
 	db, err := database.InitDB(cfg.Database.Path)
 	if err != nil {
-		appLogger.Fatalf("Failed to initialize database: %v", err)
+		appLogger.Warnf("Failed to initialize database: %v", err)
+		appLogger.Info("Running without database (CGO disabled)")
+		db = nil
+	} else {
+		appLogger.Info("Database connected successfully")
 	}
-	appLogger.Info("Database connected successfully")
 
 	// 初始化各层
 	repo := repository.NewRepository(db)
 	svc := service.NewService(repo)
 	h := handler.NewHandler(svc, appLogger)
 
-	// 自动迁移数据库
-	if err := repo.AutoMigrate(); err != nil {
-		appLogger.Fatalf("Failed to migrate database: %v", err)
+	// 自动迁移数据库 (仅在数据库可用时)
+	if db != nil {
+		if err := repo.AutoMigrate(); err != nil {
+			appLogger.Fatalf("Failed to migrate database: %v", err)
+		}
+		appLogger.Info("Database migration completed")
+	} else {
+		appLogger.Info("Skipping database migration (no database connection)")
 	}
-	appLogger.Info("Database migration completed")
 
 	// 设置路由
 	r := router.SetupRouter(h, appLogger)

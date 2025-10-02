@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"razor-blade/internal/model"
 
 	"gorm.io/gorm"
@@ -16,6 +17,9 @@ func NewRepository(db *gorm.DB) *Repository {
 
 // 自动迁移数据库表
 func (r *Repository) AutoMigrate() error {
+	if r.db == nil {
+		return nil // 没有数据库连接时跳过迁移
+	}
 	return r.db.AutoMigrate(
 		&model.Razor{},
 		&model.Blade{},
@@ -25,6 +29,9 @@ func (r *Repository) AutoMigrate() error {
 
 // Razor相关方法
 func (r *Repository) CreateRazor(razor *model.Razor) error {
+	if r.db == nil {
+		return errors.New("database not available")
+	}
 	return r.db.Create(razor).Error
 }
 
@@ -130,6 +137,16 @@ func (r *Repository) DeleteUsageRecord(id uint) error {
 
 // 统计相关方法
 func (r *Repository) GetUsageStatistics() (map[string]interface{}, error) {
+	if r.db == nil {
+		// 返回模拟数据用于演示
+		return map[string]interface{}{
+			"total_usage":    0,
+			"razor_count":    0,
+			"blade_count":    0,
+			"average_rating": 0.0,
+		}, nil
+	}
+
 	stats := make(map[string]interface{})
 
 	// 总使用次数
@@ -167,6 +184,10 @@ func (r *Repository) GetUsageStatistics() (map[string]interface{}, error) {
 }
 
 func (r *Repository) GetRecentUsageRecords(limit int) ([]model.UsageRecord, error) {
+	if r.db == nil {
+		// 返回空记录列表用于演示
+		return []model.UsageRecord{}, nil
+	}
 	var records []model.UsageRecord
 	err := r.db.Preload("Razor").Preload("Blade").
 		Order("usage_time DESC").

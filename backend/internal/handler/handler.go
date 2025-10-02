@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"razor-blade/internal/model"
 	"razor-blade/internal/service"
@@ -332,8 +333,8 @@ func (h *Handler) GetStatistics(c *gin.Context) {
 
 // 健康检查
 func (h *Handler) HealthCheck(c *gin.Context) {
-	h.successResponse(c, map[string]string{
-		"status": "healthy",
-		"time":   gin.H{"timestamp": gin.H{}},
+	h.successResponse(c, map[string]interface{}{
+		"status":    "healthy",
+		"timestamp": time.Now().Format("2006-01-02 15:04:05"),
 	}, "服务正常运行")
 }
