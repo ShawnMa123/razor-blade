@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: razor-blade-backend-dev
+    environment:
+      - RAZOR_BLADE_SERVER_PORT=8080
+      - RAZOR_BLADE_SERVER_MODE=debug
+      - RAZOR_BLADE_DATABASE_PATH=/app/data/razor-blade.db
+      - RAZOR_BLADE_LOG_LEVEL=debug
+      - RAZOR_BLADE_LOG_FORMAT=text
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/config.yaml:/app/config.yaml:ro
+    ports:
+      - "8080:8080"
+    networks:
+      - razor-blade-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: razor-blade-frontend-dev
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - razor-blade-network
+    restart: unless-stopped
+
+networks:
+  razor-blade-network:
+    driver: bridge
