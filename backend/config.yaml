@@ -3,7 +3,7 @@ server:
   mode: "debug"  # debug, release, test
 
 database:
-  path: ":memory:"  # 开发环境使用内存数据库
+  path: "./data/razor-blade.db"  # 开发环境使用文件数据库
 
 log:
   level: "info"  # debug, info, warn, error
