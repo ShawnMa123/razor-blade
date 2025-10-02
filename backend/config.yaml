@@ -1,0 +1,10 @@
+server:
+  port: "8080"
+  mode: "debug"  # debug, release, test
+
+database:
+  path: "./data/razor-blade.db"
+
+log:
+  level: "info"  # debug, info, warn, error
+  format: "text" # text, json
