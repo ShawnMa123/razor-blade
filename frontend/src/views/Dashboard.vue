@@ -121,6 +121,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useStatisticsStore } from '@/stores'
 import QuickRecordForm from '@/components/QuickRecordForm.vue'
 import dayjs from 'dayjs'
@@ -146,10 +147,6 @@ const handleRecordCreated = () => {
 onMounted(() => {
   statisticsStore.fetchDashboardData()
 })
-</script>
-
-<script>
-import { storeToRefs } from 'pinia'
 </script>
 
 <style scoped>
