@@ -16,7 +16,7 @@ services:
       - ./backend/data:/app/data
       - ./backend/config.yaml:/app/config.yaml:ro
     ports:
-      - "8080:8080"
+      - "0.0.0.0:8080:8080"
     networks:
       - razor-blade-network
     restart: unless-stopped
@@ -27,7 +27,7 @@ services:
       dockerfile: Dockerfile
     container_name: razor-blade-frontend-dev
     ports:
-      - "3000:80"
+      - "0.0.0.0:3000:80"
     depends_on:
       - backend
     networks:
@@ -37,3 +37,10 @@ services:
 networks:
   razor-blade-network:
     driver: bridge
+    driver_opts:
+      com.docker.network.bridge.enable_ip_masquerade: "true"
+      com.docker.network.bridge.enable_icc: "true"
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.25.0.0/16
