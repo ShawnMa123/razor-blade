@@ -31,3 +31,6 @@ go.work.sum
 # .idea/
 # .vscode/
 .idea/
+
+# Documentation (local development notes)
+DESIGN.md
