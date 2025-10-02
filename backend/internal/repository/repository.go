@@ -36,6 +36,9 @@ func (r *Repository) CreateRazor(razor *model.Razor) error {
 }
 
 func (r *Repository) GetRazorByID(id uint) (*model.Razor, error) {
+	if r.db == nil {
+		return nil, errors.New("database not available")
+	}
 	var razor model.Razor
 	err := r.db.First(&razor, id).Error
 	if err != nil {
@@ -45,6 +48,9 @@ func (r *Repository) GetRazorByID(id uint) (*model.Razor, error) {
 }
 
 func (r *Repository) GetRazors(offset, limit int) ([]model.Razor, int64, error) {
+	if r.db == nil {
+		return []model.Razor{}, 0, nil // 返回空列表用于演示
+	}
 	var razors []model.Razor
 	var total int64
 
@@ -57,19 +63,31 @@ func (r *Repository) GetRazors(offset, limit int) ([]model.Razor, int64, error) 
 }
 
 func (r *Repository) UpdateRazor(razor *model.Razor) error {
+	if r.db == nil {
+		return errors.New("database not available")
+	}
 	return r.db.Save(razor).Error
 }
 
 func (r *Repository) DeleteRazor(id uint) error {
+	if r.db == nil {
+		return errors.New("database not available")
+	}
 	return r.db.Delete(&model.Razor{}, id).Error
 }
 
 // Blade相关方法
 func (r *Repository) CreateBlade(blade *model.Blade) error {
+	if r.db == nil {
+		return errors.New("database not available")
+	}
 	return r.db.Create(blade).Error
 }
 
 func (r *Repository) GetBladeByID(id uint) (*model.Blade, error) {
+	if r.db == nil {
+		return nil, errors.New("database not available")
+	}
 	var blade model.Blade
 	err := r.db.First(&blade, id).Error
 	if err != nil {
@@ -79,6 +97,9 @@ func (r *Repository) GetBladeByID(id uint) (*model.Blade, error) {
 }
 
 func (r *Repository) GetBlades(offset, limit int) ([]model.Blade, int64, error) {
+	if r.db == nil {
+		return []model.Blade{}, 0, nil // 返回空列表用于演示
+	}
 	var blades []model.Blade
 	var total int64
 
@@ -91,19 +112,31 @@ func (r *Repository) GetBlades(offset, limit int) ([]model.Blade, int64, error) 
 }
 
 func (r *Repository) UpdateBlade(blade *model.Blade) error {
+	if r.db == nil {
+		return errors.New("database not available")
+	}
 	return r.db.Save(blade).Error
 }
 
 func (r *Repository) DeleteBlade(id uint) error {
+	if r.db == nil {
+		return errors.New("database not available")
+	}
 	return r.db.Delete(&model.Blade{}, id).Error
 }
 
 // UsageRecord相关方法
 func (r *Repository) CreateUsageRecord(record *model.UsageRecord) error {
+	if r.db == nil {
+		return errors.New("database not available")
+	}
 	return r.db.Create(record).Error
 }
 
 func (r *Repository) GetUsageRecordByID(id uint) (*model.UsageRecord, error) {
+	if r.db == nil {
+		return nil, errors.New("database not available")
+	}
 	var record model.UsageRecord
 	err := r.db.Preload("Razor").Preload("Blade").First(&record, id).Error
 	if err != nil {
@@ -113,6 +146,9 @@ func (r *Repository) GetUsageRecordByID(id uint) (*model.UsageRecord, error) {
 }
 
 func (r *Repository) GetUsageRecords(offset, limit int) ([]model.UsageRecord, int64, error) {
+	if r.db == nil {
+		return []model.UsageRecord{}, 0, nil // 返回空列表用于演示
+	}
 	var records []model.UsageRecord
 	var total int64
 
@@ -128,10 +164,16 @@ func (r *Repository) GetUsageRecords(offset, limit int) ([]model.UsageRecord, in
 }
 
 func (r *Repository) UpdateUsageRecord(record *model.UsageRecord) error {
+	if r.db == nil {
+		return errors.New("database not available")
+	}
 	return r.db.Save(record).Error
 }
 
 func (r *Repository) DeleteUsageRecord(id uint) error {
+	if r.db == nil {
+		return errors.New("database not available")
+	}
 	return r.db.Delete(&model.UsageRecord{}, id).Error
 }
 
