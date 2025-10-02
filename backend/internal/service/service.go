@@ -211,12 +211,24 @@ func (s *Service) CreateUsageRecord(req *model.CreateUsageRecordRequest) (*model
 		return nil, err
 	}
 
-	_, err = s.repo.GetBladeByID(req.BladeID)
+	blade, err := s.repo.GetBladeByID(req.BladeID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("刀片不存在")
 		}
 		return nil, err
+	}
+
+	// 如果需要更换刀片，检查库存并减少数量
+	if req.NeedBladeChange {
+		if blade.RemainingQuantity <= 0 {
+			return nil, errors.New("刀片库存不足，无法更换")
+		}
+		// 减少刀片库存
+		blade.RemainingQuantity--
+		if err := s.repo.UpdateBlade(blade); err != nil {
+			return nil, errors.New("更新刀片库存失败")
+		}
 	}
 
 	record := &model.UsageRecord{
