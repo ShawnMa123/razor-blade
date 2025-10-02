@@ -116,6 +116,13 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <!-- 日历视图 -->
+    <el-row :gutter="20" class="calendar-row">
+      <el-col :span="24">
+        <CalendarView />
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -124,6 +131,7 @@ import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useStatisticsStore } from '@/stores'
 import QuickRecordForm from '@/components/QuickRecordForm.vue'
+import CalendarView from '@/components/CalendarView.vue'
 import dayjs from 'dayjs'
 
 const statisticsStore = useStatisticsStore()
@@ -216,6 +224,10 @@ onMounted(() => {
   margin-bottom: 20px;
 }
 
+.calendar-row {
+  margin-bottom: 20px;
+}
+
 .quick-record-card,
 .recent-records-card {
   height: 500px;
@@ -223,7 +235,7 @@ onMounted(() => {
 
 .card-header {
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   align-items: center;
 }
 
