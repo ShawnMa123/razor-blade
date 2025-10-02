@@ -16,8 +16,12 @@ RUN go mod download
 # 复制源代码
 COPY . .
 
-# 构建应用
-RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
+# 构建应用 - 使用兼容的 SQLite 构建标签
+RUN CGO_ENABLED=1 GOOS=linux \
+    CGO_CFLAGS="-D_LARGEFILE64_SOURCE" \
+    go build -tags "sqlite_omit_load_extension" \
+    -ldflags="-s -w" \
+    -o main ./cmd/server
 
 # 使用轻量级的alpine镜像作为运行环境
 FROM alpine:latest
